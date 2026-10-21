@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心力能量资产分型测试</title>
+    <!-- 16personalities 风格 + 横向进度条，无多余尾注 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #edf2f9;
+            font-family: 'Inter', sans-serif;
+            color: #14233c;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+        }
+        .app-container {
+            max-width: 860px;
+            width: 100%;
+            background: white;
+            border-radius: 44px;
+            box-shadow: 0 30px 55px -20px rgba(0,15,40,0.3);
+            overflow: hidden;
+            padding: 2.2rem 2.2rem 2.5rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(145deg, #132842, #2b4780);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.2rem;
+            letter-spacing: -0.02em;
+        }
+
+        /* 起始页 */
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            background: #f0f5fe;
+            padding: 1.8rem 2rem;
+            border-radius: 36px;
+            margin: 1.8rem 0 2.5rem;
+            color: #1d2e4a;
+            border: 1px solid #d6e2f5;
+            font-weight: 400;
+        }
+        .btn-start {
+            background: #1b2f50;
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            padding: 1.2rem 3rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 15px 25px -8px #1b2f5080;
+            display: inline-block;
+            margin-top: 1rem;
+            border: 2px solid transparent;
+        }
+        .btn-start:hover {
+            background: #26487a;
+            transform: scale(1.02);
+        }
+        .center {
+            text-align: center;
+        }
+
+        /* 测试进度 */
+        .progress-track {
+            height: 8px;
+            background: #e0e8f2;
+            border-radius: 20px;
+            margin: 1rem 0 2rem;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 8px;
+            background: #6b4cf6;
+            border-radius: 20px;
+            transition: width 0.2s;
+        }
+        .question-card {
+            margin: 1.8rem 0;
+        }
+        .q-num {
+            background: #1f2f4a;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.4px;
+        }
+        .q-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.8rem;
+            line-height: 1.4;
+        }
+        .option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .option-item {
+            background: #f9fbfe;
+            border: 1.5px solid #dfe7f0;
+            border-radius: 60px;
+            padding: 0.9rem 1.8rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.1s;
+            font-weight: 500;
+        }
+        .option-item:hover {
+            background: #eef3fc;
+            border-color: #b2c7e2;
+        }
+        .option-item.selected {
+            background: #e1eaff;
+            border-color: #6246d3;
+            box-shadow: 0 6px 14px rgba(98,70,211,0.15);
+        }
+        .opt-letter {
+            background: white;
+            color: #14233c;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 1.4rem;
+            border: 1px solid #c6d6ec;
+            flex-shrink: 0;
+        }
+        .selected .opt-letter {
+            background: #6246d3;
+            color: white;
+            border-color: #6246d3;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2.8rem;
+        }
+        .nav-btn {
+            background: white;
+            border: 1.5px solid #1d2e4a;
+            color: #1d2e4a;
+            font-weight: 600;
+            padding: 0.8rem 2.2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .nav-btn.primary {
+            background: #1d2e4a;
+            color: white;
+            border: none;
+        }
+        .nav-btn:disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* 结果卡片 */
+        .result-card {
+            border-radius: 40px;
+            padding: 2.2rem 2rem;
+            background: #fafcff; /* fallback, overridden by bg color */
+            box-shadow: 0 12px 30px -10px rgba(0,20,40,0.2);
+            margin-top: 1rem;
+        }
+        .type-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+            line-height: 1.2;
+        }
+        .sub-type {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d4068;
+            background: rgba(255,255,255,0.5);
+            display: inline-block;
+            padding: 0.3rem 1.5rem;
+            border-radius: 60px;
+            margin: 0.5rem 0 1.5rem;
+            backdrop-filter: blur(4px);
+        }
+        /* 横向进度条区域 */
+        .dimension-bars {
+            background: rgba(255,255,255,0.6);
+            border-radius: 32px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.8rem 0;
+            backdrop-filter: blur(2px);
+        }
+        .dim-item {
+            display: flex;
+            align-items: center;
+            margin: 0.8rem 0;
+        }
+        .dim-label {
+            width: 70px;
+            font-weight: 600;
+            color: #1d2e4a;
+        }
+        .bar-bg {
+            flex: 1;
+            height: 22px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 30px;
+            margin: 0 0.8rem 0 0.5rem;
+            border: 1px solid #b3c7e2;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #485e8a, #6b4cf6);
+            border-radius: 30px;
+            width: 0%;
+        }
+        .dim-percent {
+            font-weight: 600;
+            width: 45px;
+        }
+
+        /* 两个方框 荣誉勋章 & 能量扫描 */
+        .two-boxes {
+            display: flex;
+            gap: 1.2rem;
+            margin: 1.8rem 0 0.5rem;
+            flex-wrap: wrap;
+        }
+        .info-box {
+            flex: 1 1 200px;
+            background: white;
+            border-radius: 30px;
+            padding: 1.3rem 1.5rem;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.04);
+            border: 1px solid #e1e9f5;
+        }
+        .box-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #6a3fc0;
+            margin-bottom: 0.7rem;
+            text-transform: uppercase;
+        }
+        .honor-text {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+        .energy-text {
+            line-height: 1.5;
+            color: #1f314f;
+        }
+        .reset-btn {
+            background: white;
+            border: 1.5px solid #1b2f50;
+            color: #1b2f50;
+            font-weight: 600;
+            padding: 0.8rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            margin-top: 2rem;
+            cursor: pointer;
+        }
+        .reset-btn:hover {
+            background: #1b2f50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container" id="app">
+    <!-- 起始页 (只显示标题+引导语+开始) -->
+    <div v-if="!started && !finished">
+        <h1>⚡心力能量资产分型测试</h1>
+        <div class="intro-text">
+            “很多人都在追求财富自由，但忽略了比财富更底层的是'心力资产'。今天我想邀请大家做一个简短的【心力资产评估】。这不是性格测试，而是对你应对复杂世界能力的真实体检。请大家凭第一直觉，根据自己过去半年的真实状态来选。记住，坦诚面对自己，是破局的第一步。”
+        </div>
+        <div class="center">
+            <button class="btn-start" @click="beginTest">开始测评</button>
+        </div>
+    </div>
+
+    <!-- 问卷界面 (开始后 finished==false) -->
+    <div v-else-if="!finished">
+        <h1>⚡心力能量资产分型测试</h1>
+        <div class="progress-track">
+            <div class="progress-fill" :style="{ width: ( (currentIdx+1)/21 * 100 ) + '%' }"></div>
+        </div>
+
+        <div class="question-card" v-for="(q, idx) in questions" v-show="currentIdx === idx" :key="idx">
+            <span class="q-num">第 {{ idx+1 }} / 21 题</span>
+            <div class="q-text">{{ q.text }}</div>
+            <div class="option-list">
+                <div v-for="(opt, optIdx) in q.options" :key="optIdx"
+                     class="option-item" :class="{ selected: answers[idx] === optIdx }"
+                     @click="setAnswer(idx, optIdx)">
+                    <span class="opt-letter">{{ String.fromCharCode(65 + optIdx) }}</span>
+                    <span>{{ opt.text }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn" @click="prev" :disabled="currentIdx === 0">← 上一题</button>
+            <button class="nav-btn primary" @click="next" :disabled="answers[currentIdx] === undefined">
+                {{ currentIdx === 20 ? '查看结果' : '下一题 →' }}
+            </button>
+        </div>
+    </div>
+
+    <!-- 结果页 (finished == true) 无额外footer文字 -->
+    <div v-else>
+        <h1>⚡心力能量资产分型测试</h1>
+        <!-- 结果卡片背景色由21题决定 -->
+        <div class="result-card" :style="{ backgroundColor: cardBgColor }">
+            <div class="type-title">{{ resultMeta.title }}</div>
+            <div class="sub-type">{{ resultMeta.honor }}</div>
+
+            <!-- 四维横向进度条 -->
+            <div class="dimension-bars">
+                <div class="dim-item">
+                    <span class="dim-label">心力</span>
+                    <div class="bar-bg"><div class="bar-fill" :style="{ width: scores.H + '%' }"></div></div>
+                    <span class="dim-percent">{{ scores.H }}%</span>
+                </div>
+                <div class="dim-item">
+                    <span class="dim-label">社交</span>
+                    <div class="bar-bg"><div class="bar-fill" :style="{ width: scores.S + '%' }"></div></div>
+                    <span class="dim-percent">{{ scores.S }}%</span>
+                </div>
+                <div class="dim-item">
+                    <span class="dim-label">认知</span>
+                    <div class="bar-bg"><div class="bar-fill" :style="{ width: scores.C + '%' }"></div></div>
+                    <span class="dim-percent">{{ scores.C }}%</span>
+                </div>
+                <div class="dim-item">
+                    <span class="dim-label">输出</span>
+                    <div class="bar-bg"><div class="bar-fill" :style="{ width: scores.O + '%' }"></div></div>
+                    <span class="dim-percent">{{ scores.O }}%</span>
+                </div>
+            </div>
+
+            <!-- 两个方框：荣誉勋章 & 能量扫描 -->
+            <div class="two-boxes">
+                <div class="info-box">
+                    <div class="box-label">🏅 荣誉勋章</div>
+                    <div class="honor-text">{{ resultMeta.honorText }}</div>
+                </div>
+                <div class="info-box">
+                    <div class="box-label">🔋 能量扫描</div>
+                    <div class="energy-text">{{ resultMeta.energyScan }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="center">
+            <button class="reset-btn" @click="resetTest">重新测试</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script>
+(function() {
+    // 21题原始数据（严格按文档）
+    const questionsData = [
+        { //1
+            text: "面对突如其来的重大项目黄了或职场变故，你当下的第一反应是什么？",
+            dim: 'H',
+            options: [
+                { text: "陷入深度内耗，反复纠结'为什么是我'，数周甚至数月难以走出低谷。", score: 0 },
+                { text: "允许自己短暂失落，但很快能屏蔽干扰，按小时计开始盘点止损动作。", score: 100 },
+                { text: "表面平静，但内心焦虑，需要靠大量工作或娱乐来转移注意力。", score: 25 },
+                { text: "找朋友大醉一场或疯狂吐槽，几天后靠意志力强行让自己面对现实。", score: 50 }
+            ]
+        },
+        { //2
+            text: "审视你每天的工作状态，你的精力主要消耗在处理什么性质的事情上？",
+            dim: 'S',
+            options: [
+                { text: "主要精力在于规划长期战略、向下管理团队以及跨部门协调。", score: 50 },
+                { text: "80%的时间都在处理既定流程上的重复性事件，极少与人沟通。", score: 0 },
+                { text: "仅仅只需要与团队内部，固定人员进行沟通和接触。", score: 25 },
+                { text: "每天高频面对不同的人破冰、链接、谈判、寻找合作契机。", score: 100 }
+            ]
+        },
+        { //3
+            text: "你认为自己目前身上具备的'可迁移技能（换个行业依然能打的技能）'有多少？",
+            dim: 'C',
+            options: [
+                { text: "只有一项，也就是我目前的本职专业，离开这个平台我会非常没有安全感。", score: 0 },
+                { text: "具备结构化的跨界能力，有跑通的副业或圈层资源，随时可以平移变现。", score: 100 },
+                { text: "三分钟热度，爱好非常多但博而不精，暂时无法作为核心筹码。", score: 25 },
+                { text: "有一两项持续学习的爱好和技能，但还没想好怎么把它们商业化。", score: 50 }
+            ]
+        },
+        { //4
+            text: "自媒体时代，你对自己'对外表达（写作/口播）'的能力怎么评估？",
+            dim: 'O',
+            options: [
+                { text: "观点很多表达欲很强，但缺乏框架，写出来的东西像流水账，没人愿意看。", score: 25 },
+                { text: "能极其精准、口语化地输出自己的观点，并能吸引一波同频的粉丝。", score: 100 },
+                { text: "有极度社恐或文字、镜头恐惧症，完全抗拒公开发表观点或露脸。", score: 0 },
+                { text: "肚子里有货但倒不出来，写文案极其痛苦，每次都要憋很久且经常词不达意。", score: 50 }
+            ]
+        },
+        { //5
+            text: "工作日的早上，当闹钟响起，你睁开眼的那一瞬间最真实的感受是？",
+            dim: 'H',
+            options: [
+                { text: "靠自律死撑，谈不上热爱，但为了房贷或维持现状，必须像战士一样爬起来。", score: 50 },
+                { text: "极度赖床，起床前会玩很久手机，才能说服自己起床。", score: 25 },
+                { text: "兴奋且清晰，脑子里已经浮现出今天想推进的工作和目标，迫不及待想要出门。", score: 100 },
+                { text: "沉重麻木，感觉自己像在'服刑'，机械地去打一份工，对这一天毫无期待。", score: 0 }
+            ]
+        },
+        { //6
+            text: "假设明天你所在的行业发生不可逆的剧变，你的动作是？",
+            dim: 'C',
+            options: [
+                { text: "极度焦虑四顾茫然，只能停在原地观望同行怎么做，跟风效仿。", score: 25 },
+                { text: "等待公司高层的决策，或者寄希望于外部环境回暖。", score: 0 },
+                { text: "毫不慌张，立马调动之前储备的备选方案（Plan B/C），迅速切换赛道。", score: 100 },
+                { text: "脑子里有几个转型的想法，但平时没空测试，现在只能被迫仓促上阵。", score: 50 }
+            ]
+        },
+        { //7
+            text: "当你遇到一个靠自己现有能力绝对无法解决的'商业死局'时，你会怎么办？",
+            dim: 'S',
+            options: [
+                { text: "找同阶层的朋友或家人吐槽，获取情绪价值，但拿不到有效建议。", score: 25 },
+                { text: "完全孤立无援，只能靠自己在网上瞎搜，一个人在黑屋子里摸索。", score: 0 },
+                { text: "能立刻拨通几位拿过大结果的'贵人'电话，吃顿饭就能拿到破局线索。", score: 100 },
+                { text: "认识一些牛人，但仅限于点赞之交，遇到事需要反复推演如何开口，不知道拿什么交换。", score: 50 }
+            ]
+        },
+        { //8
+            text: "在日常工作中，你对'新兴工具（如：AI）'的使用态度是？",
+            dim: 'O',
+            options: [
+                { text: "深度绑定，已经能熟练让AI替我完成70%的基础文案、策划和资料搜集。", score: 100 },
+                { text: "买过课，但学得很碎片，用出来的东西没有'人味'，基本闲置。", score: 50 },
+                { text: "听说过，偶尔用用免费版查查资料，不认为机器能替代人工的情感和创意。", score: 25 },
+                { text: "觉得跟自己目前的岗位无关，完全没有去了解和触碰的欲望。", score: 0 }
+            ]
+        },
+        { //9
+            text: "参加一场行业线下活动，现场有很多大佬，你通常的状态是？",
+            dim: 'S',
+            options: [
+                { text: "默默坐在角落听干货，做完笔记就走，不会主动去加别人的微信与人链接。", score: 0 },
+                { text: "游刃有余，不仅能快速破冰从容递上名片/简历，还快速让对方记住我的价值。", score: 100 },
+                { text: "不管三七二十一加上再说，满场跑扫码，但后续根本不知道怎么破冰和维护关系。", score: 50 },
+                { text: "只和自己相熟，看起来跟自己差不多Level的人扎堆聊天。", score: 25 }
+            ]
+        },
+        { //10
+            text: "你获取信息和提升认知的核心渠道是什么？",
+            dim: 'C',
+            options: [
+                { text: "刷短视频、看免费的热搜新闻，算法推什么我就看什么。", score: 0 },
+                { text: "混迹于各类社群，资料存了几个G，但基本没怎么系统看过。", score: 25 },
+                { text: "有付费意识，希望学习系统性体系化的课程，跟着有结果的人进行结构化学习。", score: 100 },
+                { text: "偶尔看书或听播客，有学习的心，但缺乏能帮我把知识整合调用的框架。", score: 50 }
+            ]
+        },
+        { //11
+            text: "如果有人在公开场合对你的工作成果提出了批评，你内心的反应？",
+            dim: 'H',
+            options: [
+                { text: "表面笑嘻嘻，内心MMP，随后几天都在回味自己当时没发挥好的话术。", score: 50 },
+                { text: "会瞬间红脸防御，极力反驳，这件事会在我心里记很久，甚至影响对这个人的态度。", score: 25 },
+                { text: "可以区分对方的情绪和建议，剥离出可用的建议，然后继续推进目标。", score: 100 },
+                { text: "严重自我怀疑，觉得自己的努力一文不值，甚至想直接辞职或放弃项目。", score: 0 }
+            ]
+        },
+        { //12
+            text: "你现在的通讯录里，能够随时响应并对你业务有实质性帮助的'人脉'资源有多少？",
+            dim: 'S',
+            options: [
+                { text: "几乎各行各业都有链接，能迅速组局盘活资源。", score: 100 },
+                { text: "有一些固定合作的老客户，但很难开拓新的高质量资源圈。", score: 50 },
+                { text: "几乎没有，我的工作不需要我掌握这类资源。", score: 0 },
+                { text: "加了不少群，但都是僵尸粉，真要找人帮忙时发现一个都用不上。", score: 25 }
+            ]
+        },
+        { //13
+            text: "你怎么看待'个人IP'这件事？",
+            dim: 'O',
+            options: [
+                { text: "觉得是割韭菜或者太高调，我只想踏踏实实做好手头的事，酒香不怕巷子深。", score: 0 },
+                { text: "尝试做过账号，但找不到定位，吭哧吭哧搞团队花了不少钱，最后烂尾了。", score: 50 },
+                { text: "深知'你的表达就是你的身价'，已经在使用高杠杆工具赋能自己的第二职业曲线。", score: 100 },
+                { text: "知道很重要，但觉得自己没什么可输出的，不知道从何开始。", score: 25 }
+            ]
+        },
+        { //14
+            text: "过去一年，你结交的新朋友中，让你觉得'价值观极其契合、能一起向上拉扯'的挚友有几个？",
+            dim: 'S',
+            options: [
+                { text: "没有，越长大越孤单，身边的朋友大多在原地踏步或向下走。", score: 0 },
+                { text: "有那么1-2个，但大家平时都很忙，只停留在偶尔的微信点赞。", score: 25 },
+                { text: "结识了一群经过筛选的高能量同频人，大家经常线下见面，甚至一起过生日。", score: 100 },
+                { text: "认识了一些新同行，但基本都是利益交换，谈不上价值观契合。", score: 50 }
+            ]
+        },
+        { //15
+            text: "当你的团队中出现一个反复犯错且带负面情绪的员工，你的处理方式是？",
+            dim: 'H',
+            options: [
+                { text: "为了避免冲突，干脆自己把他的活儿接过来干了。", score: 0 },
+                { text: "反复跟他谈心，试图拯救他。", score: 25 },
+                { text: "快速界定问题，如果不符合团队价值观底线，当机立断进行人员替换。", score: 100 },
+                { text: "严厉批评他一顿，但后续依然没有建立有效的考核和退出机制。", score: 50 }
+            ]
+        },
+        { //16
+            text: "当你需要写一份极为重要的文案（如：融资BP、对外演讲稿、爆款脚本）时，你的状态是？",
+            dim: 'O',
+            options: [
+                { text: "只能大致进行描述，但文字干巴巴的没有感染力。", score: 25 },
+                { text: "能够迅速搭建框架，并利用AI工具完成润色。", score: 100 },
+                { text: "脑袋里有想法，但无法用语言准确的描述。", score: 50 },
+                { text: "对着空白文档发呆，半天蹦不出一个字。", score: 0 }
+            ]
+        },
+        { //17
+            text: "对于'花钱买信息、买人脉'这件事，你最真实的看法是？",
+            dim: 'C',
+            options: [
+                { text: "这是高投入产出比的动作，花几千块买前沿认知和高质量贵人圈，太划算了。", score: 100 },
+                { text: "有点舍不得，觉得网上都有免费的教程，花点时间自己也能搜到。", score: 0 },
+                { text: "曾经花过冤枉钱被割了韭菜，现在极度警惕。", score: 25 },
+                { text: "愿意花钱，但往往买完就放在一边吃灰，缺乏深度的陪跑和落地指导。", score: 50 }
+            ]
+        },
+        { //18
+            text: "你的脑子能同时处理多少条业务线？",
+            dim: 'C',
+            options: [
+                { text: "完全单线程，一旦有突发事件打乱计划，我一整天的心态都会崩掉。", score: 0 },
+                { text: "能同时掌控多个项目，并且懂得跨模块调用资源，像八爪鱼一样有条不紊。", score: 100 },
+                { text: "看似同时开着10个对话框在处理很多事，但其实都是碎片化救火，没深度。", score: 25 },
+                { text: "能兼顾主业和一两项副业，但常常觉得分身乏术，缺乏一套自动化系统。", score: 50 }
+            ]
+        },
+        { //19
+            text: "休息日的时候，你通常是如何恢复能量的？",
+            dim: 'H',
+            options: [
+                { text: "瘫在床上刷一天手机或睡死过去，周日晚上想到明天要上班就极度焦虑。", score: 0 },
+                { text: "强迫自己去学点东西，但其实脑子没转，只是为了缓解落后焦虑。", score: 25 },
+                { text: "和高能量的圈子聚会交流，或者通过高质量的独处深度复盘，给大脑'做SPA'。", score: 100 },
+                { text: "陪伴家人或进行普通的娱乐消费（逛街/看剧），能恢复体力但认知没更新。", score: 50 }
+            ]
+        },
+        { //20
+            text: "当你接手一个完全陌生的领域或任务时，你的动作是？",
+            dim: 'O',
+            options: [
+                { text: "试图推脱，觉得自己现有的知识储备根本搞不定。", score: 0 },
+                { text: "边学边干，遇到具体问题就去网上查具体方法，缺乏整体逻辑。", score: 50 },
+                { text: "迅速找到该领域拿到结果的人请教，并利用AI工具快速建立的基础骨架。", score: 100 },
+                { text: "盲目自信直接上手，凭直觉做事，往往因为缺乏系统性思维踩一堆坑。", score: 25 }
+            ]
+        },
+        { //21 不计分 用于卡片底色
+            text: "如果有一个机会能让你突破现有的瓶颈，你觉得你当下最缺的是什么？",
+            dim: null,
+            options: [
+                { text: "缺一套能帮我写出爆款文案、替代几万块团队的AI智能体打法。" },
+                { text: "缺一个能让我带着简历和项目去对接贵人、寻找甲乙方的优质人脉圈层。" },
+                { text: "缺一套能帮我梳理底层逻辑、看透宏观红利、避开资产缩水坑的认知框架。" },
+                { text: "缺一个正能量的场域，让我从单打独斗的疲惫感中解脱出来，补补能量。" }
+            ]
+        }
+    ];
+
+    new Vue({
+        el: '#app',
+        data: {
+            questions: questionsData,
+            answers: Array(21).fill(undefined),
+            currentIdx: 0,
+            started: false,
+            finished: false
+        },
+        computed: {
+            // 四维平均分 (0-100)
+            scores() {
+                const dims = { H: [], S: [], C: [], O: [] };
+                for (let i = 0; i < 20; i++) {
+                    const ans = this.answers[i];
+                    if (ans === undefined) continue;
+                    const q = this.questions[i];
+                    const dim = q.dim;
+                    const score = q.options[ans].score;
+                    if (dim && dims[dim]) dims[dim].push(score);
+                }
+                const avg = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
+                return { H: avg(dims.H), S: avg(dims.S), C: avg(dims.C), O: avg(dims.O) };
+            },
+            // 主类型判定 (四种)
+            mainType() {
+                const s = this.scores;
+                const entries = Object.entries(s).sort((a,b) => b[1] - a[1]);
+                const top = entries[0][0];
+                const secondVal = entries[1][1];
+                const balanced = s.H >= 42 && s.S >= 42 && s.C >= 42 && s.O >= 42 && (entries[0][1] - secondVal < 12);
+                if (balanced) return '均衡发展型';
+                if (top === 'C' || top === 'H') return '认知与心力主导型';
+                if (top === 'O') return '执行与输出主导型';
+                if (top === 'S') return '社交与链接主导型';
+                return '均衡发展型';
+            },
+            // 高阶条件: (心力+认知)/2 > 60
+            isHigh() {
+                return ((this.scores.H + this.scores.C) / 2) > 60;
+            },
+            // 结果元数据（高阶/低阶不直接显示词汇，但荣誉勋章区分）
+            resultMeta() {
+                const type = this.mainType;
+                const high = this.isHigh;
+                if (type === '认知与心力主导型') {
+                    if (high) {
+                        return {
+                            title: '认知与心力主导型',
+                            honor: '高维战略者',
+                            honorText: '你拥有极强的战略定力和商业直觉，是人群中1%的清醒者，具备极高的领袖潜质。',
+                            energyScan: '你的大脑版本已经升级，但执行层和社交圈还没跟上。你常感到"高处不胜寒"，总在为团队的低效填坑。你的痛点不是认知，而是"杠杆"。'
+                        };
+                    } else {
+                        return {
+                            title: '认知与心力主导型',
+                            honor: '清醒的潜行者',
+                            honorText: '你对世界有极深的洞察力，思维缜密且极具审美，是一个内心世界极其丰富的理想主义者。',
+                            energyScan: '现在的你就像一台拥有超强CPU但内存不足的电脑。你想得通透却迟迟不敢出手，常在"追求完美"中陷入内耗。你缺的不是知识，而是"破局的勇气与工具"。'
+                        };
+                    }
+                } else if (type === '执行与输出主导型') {
+                    if (high) {
+                        return {
+                            title: '执行与输出主导型',
+                            honor: '卓越的超级个体',
+                            honorText: '你是极具行动力的实战派，靠专业和勤奋已经拿到了令人羡慕的结果，是大家眼中最靠谱的榜样。',
+                            energyScan: '你正处于"体力换金钱"的天花板。你跑得很快，但单打独斗让你感到疲惫。你现在的痛点是"缺乏复制感"，你需要把自己的专业变成一套可以自动运转的系统。'
+                        };
+                    } else {
+                        return {
+                            title: '执行与输出主导型',
+                            honor: '坚韧的攀登者',
+                            honorText: '你的执行力和抗压力远超常人，这种不走捷径、脚踏实地的精神是你未来翻盘最稳固的底牌。',
+                            energyScan: '你目前正处于"战术勤奋"的迷雾中。你很忙，但感觉在原地转圈。这是因为你的认知带宽被琐事占满了，缺一套"抬头看路的导航系统"。'
+                        };
+                    }
+                } else if (type === '社交与链接主导型') {
+                    if (high) {
+                        return {
+                            title: '社交与链接主导型',
+                            honor: '能量攒局者',
+                            honorText: '你拥有极高的情商与资源整合能力，是天然的人群焦点，更是链接不同世界的"超级接口"。',
+                            energyScan: '你的社交面极广，但你开始意识到"点赞之交"无法沉淀为核心资产。你现在的痛点是"缺乏高密度的护城河"，你需要把人脉转化成真正的IP势能。'
+                        };
+                    } else {
+                        return {
+                            title: '社交与链接主导型',
+                            honor: '温暖的链接者',
+                            honorText: '你非常有亲和力，善于共情，是朋友眼中最值得信赖的避风港，拥有极好的人缘基础。',
+                            energyScan: '现在的你容易被别人的情绪和无效社交吸走能量，导致自己在该冲刺的时候心力不足。你缺的不是朋友，而是"向上生长的圈层和说不的底气"。'
+                        };
+                    }
+                } else { // 均衡
+                    if (high) {
+                        return {
+                            title: '均衡发展型',
+                            honor: '全能破局先锋',
+                            honorText: '你是优秀的"六边形战士"，综合素质极高，各方面都平衡得很好，是极具潜力的种子选手。',
+                            energyScan: '你正处于突破前的平原期。万事俱备，只欠一个"引爆点"。你感到麻木是因为你现有的圈层已经给不了你新鲜的刺激和降维的信息差了。'
+                        };
+                    } else {
+                        return {
+                            title: '均衡发展型',
+                            honor: '觉醒中的探索者',
+                            honorText: '你已经意识到了现状的局限，并开始主动寻找出口，这份自我觉醒的意识是你开启新生的第一道光。',
+                            energyScan: '现在的你可能感到有些迷茫，仿佛在黑屋子里洗衣服，看不到进度。这不是你的错，是因为你还没拿到那套"系统的生存工具包"，能量被现实暂时封印了。'
+                        };
+                    }
+                }
+            },
+            // 资料卡底色 来自21题 A红 B蓝 C绿 D紫
+            cardBgColor() {
+                const idx = this.answers[20];
+                if (idx === 0) return '#ffebe5'; // 红调
+                if (idx === 1) return '#e2ecff'; // 蓝调
+                if (idx === 2) return '#e0f3e0'; // 绿调
+                if (idx === 3) return '#f0e2fa'; // 紫调
+                return '#f3f7ff';
+            }
+        },
+        methods: {
+            beginTest() {
+                this.started = true;
+            },
+            setAnswer(idx, optIdx) {
+                this.$set(this.answers, idx, optIdx);
+            },
+            prev() {
+                if (this.currentIdx > 0) this.currentIdx--;
+            },
+            next() {
+                if (this.answers[this.currentIdx] === undefined) return;
+                if (this.currentIdx === 20) {
+                    this.finished = true;
+                } else {
+                    this.currentIdx++;
+                }
+            },
+            resetTest() {
+                this.answers = Array(21).fill(undefined);
+                this.currentIdx = 0;
+                this.started = false;
+                this.finished = false;
+            }
+        }
+    });
+})();
+</script>
+</body>
+</html>
